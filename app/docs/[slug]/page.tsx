@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabaseClient";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
+import rehypeRaw from "rehype-raw";
 
 type PageProps = {
   params: Promise<{ slug: string }>;
@@ -19,10 +20,10 @@ export default async function DocPage({ params }: PageProps) {
 
   return (
     <article className="doc-content">
-      <h1>{data.title}</h1>
-
-      {/* THIS IS THE KEY PART */}
-      <ReactMarkdown>{data.content}</ReactMarkdown>
+    
+      <ReactMarkdown rehypePlugins={[rehypeRaw]}>
+        {data.content}
+      </ReactMarkdown>
     </article>
   );
 }
