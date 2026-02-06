@@ -2,148 +2,115 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import { Search } from "lucide-react";
 
-/* ---------- TYPES ---------- */
-type SearchItem = {
+type Doc = {
   id: string;
   title: string;
   slug: string;
-  type: "section" | "doc";
 };
 
-/* ---------- TOP NAV SECTIONS ---------- */
-const NAV_SECTIONS = [
-  { label: "Organization", slug: "organization" },
-  { label: "People", slug: "people" },
-  { label: "Process", slug: "process" },
-  { label: "Technology", slug: "technology" },
-  { label: "Data", slug: "data" },
-  { label: "Governance", slug: "governance" },
-  { label: "Scope Management", slug: "scope-management" },
-  { label: "Value Management", slug: "value-management" },
-  { label: "Administration", slug: "administration" },
-  { label: "Testing", slug: "testing" },
-  { label: "Operational Readiness", slug: "operational-readiness" },
-  { label: "RACI Chart", slug: "raci-chart" },
-  { label: "User", slug: "user" },
-  { label: "Time and Expense", slug: "time-and-expense" },
-];
-
 export default function Navbar() {
+  const pathname = usePathname();
+
   const [query, setQuery] = useState("");
-  const [results, setResults] = useState<SearchItem[]>([]);
+  const [results, setResults] = useState<Doc[]>([]);
   const [open, setOpen] = useState(false);
 
-  /* ---------- SEARCH LOGIC ---------- */
+  const isDocs = pathname.startsWith("/docs");
+  const isReleases = pathname.startsWith("/releases");
+
   useEffect(() => {
     if (!query.trim()) {
       setResults([]);
       return;
     }
 
-    const q = query.toLowerCase();
-
-    // 1️⃣ Section matches
-    const sectionMatches: SearchItem[] = NAV_SECTIONS
-      .filter((s) => s.label.toLowerCase().includes(q))
-      .map((s) => ({
-        id: `section-${s.slug}`,
-        title: s.label,
-        slug: s.slug,
-        type: "section",
-      }));
-
-    // 2️⃣ Docs matches
-    const fetchDocs = async () => {
+    const fetchResults = async () => {
       const { data } = await supabase
         .from("docs")
         .select("id, title, slug")
         .or(`title.ilike.%${query}%,content.ilike.%${query}%`)
-        .limit(6);
+        .limit(8);
 
-      const docMatches: SearchItem[] =
-        data?.map((d) => ({
-          id: d.id,
-          title: d.title,
-          slug: d.slug,
-          type: "doc",
-        })) || [];
-
-      setResults([...sectionMatches, ...docMatches]);
+      setResults(data || []);
     };
 
-    fetchDocs();
+    fetchResults();
   }, [query]);
 
   return (
     <header className="navbar">
-  {/* LEFT */}
-  <div className="navbar-left">
-    <Link href="/" className="navbar-logo">
-      AMIGO
-    </Link>
+      {/* LEFT */}
+      <div className="navbar-left">
+        <Link href="/docs" className="navbar-logo">
+          AMIGO
+        </Link>
 
-    <nav className="navbar-links">
-      <Link href="/docs/organization">Organization</Link>
-      <Link href="/docs/people">People</Link>
-      <Link href="/docs/process">Process</Link>
-      <Link href="/docs/technology">Technology</Link>
-      <Link href="/docs/data">Data</Link>
-      <Link href="/docs/governance">Governance</Link>
+        <nav className="navbar-tabs">
+          <Link
+            href="/docs"
+            className={`navbar-tab ${isDocs ? "active" : ""}`}
+          >
+            Documentation
+          </Link>
 
-      <div className="navbar-more">
-        More ▾
-        <div className="navbar-more-menu">
-          <Link href="/docs/scope-management">Scope Management</Link>
-          <Link href="/docs/value-management">Value Management</Link>
-          <Link href="/docs/administration">Administration</Link>
-          <Link href="/docs/testing">Testing</Link>
-          <Link href="/docs/operational-readiness">Operational Readiness</Link>
-          <Link href="/docs/raci-chart">RACI Chart</Link>
-          <Link href="/docs/user">User</Link>
-          <Link href="/docs/time-and-expense">Time & Expense</Link>
+          <Link
+            href="/releases"
+            className={`navbar-tab ${isReleases ? "active" : ""}`}
+          >
+            Released Notes
+          </Link>
+        </nav>
+      </div>
+
+      {/* CENTER */}
+      <div className="navbar-center">
+        <div className="navbar-search">
+          <Search size={16} />
+          <input
+            type="text"
+            placeholder="Search documentation…"
+            value={query}
+            onChange={(e) => {
+              setQuery(e.target.value);
+              setOpen(true);
+            }}
+            onFocus={() => setOpen(true)}
+          />
+
+          {open && (
+            <div className="search-dropdown">
+              {results.length > 0 ? (
+                results.map((doc) => (
+                  <Link
+                    key={doc.id}
+                    href={`/docs/${doc.slug}`}
+                    className="search-item"
+                    onClick={() => {
+                      setQuery("");
+                      setOpen(false);
+                    }}
+                  >
+                    {doc.title}
+                  </Link>
+                ))
+              ) : (
+                query && (
+                  <div className="search-empty">
+                    No results found
+                  </div>
+                )
+              )}
+            </div>
+          )}
         </div>
       </div>
-    </nav>
-  </div>
 
-  {/* RIGHT */}
-  <div className="navbar-right">
-    <div className="navbar-search">
-      <Search size={16} />
-      <input
-        type="text"
-        placeholder="Search documentation..."
-        value={query}
-        onChange={(e) => {
-          setQuery(e.target.value);
-          setOpen(true);
-        }}
-        onFocus={() => setOpen(true)}
-      />
-
-      {open && results.length > 0 && (
-        <div className="search-dropdown">
-          {results.map((doc) => (
-            <Link
-              key={doc.id}
-              href={`/docs/${doc.slug}`}
-              className="search-item"
-              onClick={() => {
-                setQuery("");
-                setOpen(false);
-              }}
-            >
-              {doc.title}
-            </Link>
-          ))}
-        </div>
-      )}
-    </div>
-  </div>
-</header>
-
+      {/* RIGHT (future icons / profile) */}
+      <div className="navbar-right" />
+    </header>
   );
 }
