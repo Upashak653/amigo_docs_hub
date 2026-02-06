@@ -1,6 +1,6 @@
-/* =========================
+/* ======================================================
    GLOBAL RESET
-   ========================= */
+====================================================== */
 
 * {
   box-sizing: border-box;
@@ -15,36 +15,195 @@ body {
   color: #e5e7eb;
 }
 
-/* =========================
+/* ======================================================
    NAVBAR
-   ========================= */
+====================================================== */
 
 .navbar {
-  height: 56px;
-  padding: 0 24px;
-  display: flex;
-  align-items: center;
-  font-size: 18px;
-  font-weight: 600;
-  background: #0f141b;
-  border-bottom: 1px solid #1f2937;
   position: sticky;
   top: 0;
+  z-index: 40;
+  height: 56px;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(180deg, #0b1220, #020617);
+  border-bottom: 1px solid #1f2937;
+}
+
+/* LEFT SECTION */
+
+.navbar-left {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.navbar-logo {
+  font-size: 18px;
+  font-weight: 700;
+  color: #ffffff;
+  text-decoration: none;
+}
+
+/* NAV LINKS */
+
+.navbar-links {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.navbar-links a {
+  font-size: 14px;
+  color: #d1d5db;
+  text-decoration: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.navbar-links a:hover {
+  background: #020617;
+  color: #ffffff;
+}
+
+/* MORE MENU */
+
+.navbar-more {
+  position: relative;
+  cursor: pointer;
+  font-size: 14px;
+  color: #d1d5db;
+  padding: 6px 10px;
+  border-radius: 6px;
+}
+
+.navbar-more:hover {
+  background: #020617;
+  color: #ffffff;
+}
+
+.navbar-more-menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 220px;
+  background: #020617;
+  border: 1px solid #1f2937;
+  border-radius: 10px;
+  padding: 6px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  display: none;
+  z-index: 60;
+}
+
+.navbar-more:hover .navbar-more-menu {
+  display: block;
+}
+
+.navbar-more-menu a {
+  display: block;
+  padding: 8px 12px;
+  font-size: 14px;
+  color: #e5e7eb;
+  text-decoration: none;
+  border-radius: 6px;
+}
+
+.navbar-more-menu a:hover {
+  background: #1f2937;
+}
+
+/* RIGHT SECTION */
+
+.navbar-right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+/* ======================================================
+   SEARCH
+====================================================== */
+
+.navbar-search {
+  position: relative;
+  width: 360px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 14px;
+  height: 36px;
+  background: #020617;
+  border: 1px solid #1f2937;
+  border-radius: 999px;
   z-index: 10;
 }
 
-/* =========================
+.navbar-search svg {
+  color: #9ca3af;
+}
+
+.navbar-search input {
+  flex: 1;
+  height: 100%;
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #e5e7eb;
+  font-size: 14px;
+}
+
+.navbar-search input::placeholder {
+  color: #9ca3af;
+}
+
+/* SEARCH DROPDOWN */
+
+.search-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 100%;
+  background: #020617;
+  border: 1px solid #1f2937;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6);
+  z-index: 20;
+}
+
+.search-item {
+  display: block;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: #e5e7eb;
+  text-decoration: none;
+}
+
+.search-item:hover {
+  background: #1f2937;
+}
+
+.search-empty {
+  padding: 12px;
+  font-size: 13px;
+  color: #9ca3af;
+}
+
+/* ======================================================
    DOCS LAYOUT
-   ========================= */
+====================================================== */
 
 .docs-layout {
   display: flex;
   min-height: calc(100vh - 56px);
 }
 
-/* =========================
+/* ======================================================
    SIDEBAR
-   ========================= */
+====================================================== */
 
 .sidebar {
   width: 260px;
@@ -53,6 +212,8 @@ body {
   padding: 12px;
   overflow-y: auto;
   transition: width 0.25s ease;
+  position: relative;
+  z-index: 50; /* ALWAYS above search */
 }
 
 .sidebar.closed {
@@ -60,7 +221,7 @@ body {
   padding: 8px;
 }
 
-/* Sidebar header */
+/* SIDEBAR HEADER */
 
 .sidebar-header {
   display: flex;
@@ -76,7 +237,7 @@ body {
   white-space: nowrap;
 }
 
-/* Toggle */
+/* TOGGLE */
 
 .sidebar-toggle {
   background: #1f2937;
@@ -91,7 +252,7 @@ body {
   background: #374151;
 }
 
-/* Sections */
+/* SECTIONS */
 
 .sidebar-section {
   margin-bottom: 12px;
@@ -117,11 +278,10 @@ body {
   color: #f9fafb;
 }
 
-/* Links */
+/* LINKS */
 
 .sidebar-links {
   margin-top: 4px;
-  padding-left: 4px;
 }
 
 .sidebar-link {
@@ -139,17 +299,15 @@ body {
   color: #ffffff;
 }
 
-/* Active */
-
 .sidebar-link-active {
   background: #2563eb;
   color: #ffffff;
   font-weight: 500;
 }
 
-/* =========================
+/* ======================================================
    MAIN CONTENT
-   ========================= */
+====================================================== */
 
 .docs-main {
   flex: 1;
@@ -158,18 +316,17 @@ body {
   justify-content: center;
 }
 
-/* =========================
+/* ======================================================
    DOCUMENT CONTENT
-   ========================= */
+====================================================== */
 
 .doc-content {
   width: 100%;
   max-width: 900px;
   background: #0b0f14;
-  color: #e5e7eb;
 }
 
-/* Headings */
+/* HEADINGS */
 
 .doc-content h1 {
   font-size: 32px;
@@ -196,7 +353,7 @@ body {
   color: #e5e7eb;
 }
 
-/* Paragraphs */
+/* PARAGRAPHS */
 
 .doc-content p {
   font-size: 15px;
@@ -206,21 +363,19 @@ body {
   text-align: justify;
 }
 
-/* Lists */
+/* LISTS */
 
 .doc-content ul,
 .doc-content ol {
   margin: 16px 0 16px 24px;
-  padding-left: 12px;
 }
 
 .doc-content li {
   margin-bottom: 8px;
-  line-height: 1.6;
   color: #d1d5db;
 }
 
-/* Links */
+/* LINKS */
 
 .doc-content a {
   color: #60a5fa;
@@ -231,7 +386,7 @@ body {
   text-decoration: underline;
 }
 
-/* Blockquotes */
+/* BLOCKQUOTE */
 
 .doc-content blockquote {
   border-left: 3px solid #2563eb;
@@ -241,28 +396,25 @@ body {
   font-style: italic;
 }
 
-/* Inline code */
+/* CODE */
 
 .doc-content code {
   background: #111827;
   padding: 2px 6px;
   border-radius: 4px;
   font-size: 14px;
-  color: #e5e7eb;
 }
 
-/* Code blocks */
+/* CODE BLOCK */
 
 .doc-content pre {
   background: #020617;
-  color: #e5e7eb;
   padding: 16px;
   border-radius: 8px;
   overflow-x: auto;
-  margin: 24px 0;
 }
 
-/* Tables */
+/* TABLES */
 
 .doc-content table {
   width: 100%;
@@ -274,112 +426,12 @@ body {
 .doc-content td {
   border: 1px solid #1f2937;
   padding: 10px 12px;
-  text-align: left;
 }
 
 .doc-content th {
   background: #020617;
-  color: #f9fafb;
   font-weight: 600;
 }
-/* NAVBAR */
-.navbar {
-  height: 56px;
-  background: linear-gradient(180deg, #0b0f14, #020617);
-  border-bottom: 1px solid #1f2937;
-  display: flex;
-  align-items: center;
-  padding: 0 20px;
-  gap: 24px;
-}
-
-/* TITLE */
-.navbar-title {
-  font-size: 16px;
-  font-weight: 600;
-  color: #e5e7eb;
-  text-decoration: none;
-}
-
-/* SEARCH */
-.navbar-search {
-  position: relative;
-  flex: 1;
-  max-width: 520px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #020617;
-  border: 1px solid #1f2937;
-  border-radius: 8px;
-  padding: 6px 10px;
-}
-
-.navbar-search input {
-  flex: 1;
-  background: transparent;
-  border: none;
-  outline: none;
-  color: #e5e7eb;
-  font-size: 14px;
-}
-
-/* DROPDOWN */
-.search-dropdown {
-  position: absolute;
-  top: 42px;
-  left: 0;
-  right: 0;
-  background: #020617;
-  border: 1px solid #1f2937;
-  border-radius: 8px;
-  overflow: hidden;
-  z-index: 50;
-  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.6);
-}
-
-/* RESULT ITEM */
-.search-item {
-  display: block;
-  padding: 10px 12px;
-  font-size: 14px;
-  color: #e5e7eb;
-  text-decoration: none;
-}
-
-.search-item:hover {
-  background: #1f2937;
-}
-
-/* EMPTY */
-.search-empty {
-  padding: 12px;
-  font-size: 13px;
-  color: #9ca3af;
-}
-
-/* Dropdown */
-
-.search-dropdown {
-  position: absolute;
-  top: 44px;
-  left: 0;
-  right: 0;
-  background: #020617;
-  border: 1px solid #1f2937;
-  border-radius: 8px;
-  overflow: hidden;
-  z-index: 50;
-}
-
-.search-item {
-  display: block;
-  padding: 10px 12px;
-  font-size: 14px;
-  color: #e5e7eb;
-  text-decoration: none;
-}
-
-.search-item:hover {
-  background: #1f2937;
+.doc-content td {
+  background: #0b0f14;
 }
